@@ -38,3 +38,9 @@ void calculate_vertex (std::vector<float> vert, std::vector<float> norm, std::ve
 			abort ();
 	}
 }
+
+/* Parametric equations for the sphere (unit radius):
+	x = sqrt (1 - cos (phi)^2) * cos (theta);
+	y = sqrt (1- cos (phi)^2) * sin (theta);
+	z = cos (phi);
+*/
