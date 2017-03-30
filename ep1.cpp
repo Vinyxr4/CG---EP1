@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <cmath>
 #include <vector>
+#include <fstream>
+#include <string>
 
 class Vertex {
 	private:
@@ -31,10 +33,15 @@ float Vertex::z (void) {
 	return Z;
 }
 
+std::fstream output;
+std::string output_name;
+
 void calculate_vertex (std::vector<Vertex> *vertices, std::vector<int> params);
-void print_to_obj ();
+void print_to_obj (std::vector<Vertex> vertices, std::vector<int> params);
 void correct_params (std::vector<int> params, int curve_id);
 void calc_for_sphere (std::vector<Vertex> *vertices, std::vector<int> params);
+void print_sphere (std::vector<Vertex> vertices, std::vector<int> params);
+void desired_curve (std::vector<int> *params);
 
 int main () {
 	//Because there are three coordinates for each vertex,
@@ -42,18 +49,27 @@ int main () {
 	std::vector<Vertex> vertices;
 	std::vector<int> parameters;
 
-	//desired_curve (parameters);
+	desired_curve (&parameters);
 	parameters.push_back (1);
-	parameters.push_back (4);
-	parameters.push_back (4);
+	parameters.push_back (100);
+	parameters.push_back (100);
 	calculate_vertex (&vertices, parameters);
 
+	/*
 	for (int i = 0; i < vertices.size (); ++i)
 		std::cout << vertices[i].x() << " " << vertices[i].y() << " " << vertices[i].z() << "\n";
-
-	//print_to_obj ();
+	*/
+	
+	output_name = "teste.obj";
+	print_to_obj (vertices, parameters);
 
 	return 0;
+}
+
+void desired_curve (std::vector<int> *params) {
+	std::string token;
+	std::cin >> token;
+	std::cout << token << "\n";
 }
 	
 void calculate_vertex (std::vector<Vertex> *vertices, std::vector<int> params) {
@@ -98,8 +114,45 @@ void calc_for_sphere (std::vector<Vertex> *vertices, std::vector<int> params) {
 	}
 }
 
-void print_to_obj () {
+void print_to_obj (std::vector<Vertex> vertices, std::vector<int> params) {
+	switch (params[0]) {
+		case 0:
+			//print_cylinder (vertices, params);
+			break;
+		case 1:
+			print_sphere (vertices, params);
+			break;
+		case 2:
+			//print_torus (vertices, params);
+			break;
+		default:
+			std::cout << "Not a valid curve!\n";
+			abort ();
+	}
+}
 
+
+void print_sphere (std::vector<Vertex> vertices, std::vector<int> params) {
+	output.open (output_name.c_str (), std::fstream::out);
+	
+	for (int i = 0; i < vertices.size (); ++i)
+		output << "v " << vertices[i].x() << " " << vertices[i].y() << " "<< vertices[i].z() << "\n";
+
+	for (int i = 0; i < params[1]; ++i) {
+		for (int j = 0; j < params[2] - 1; ++j) {
+			if (i != params[1] - 1) {
+				output << "f " << 1 + i*params[2] + j << " " << 1 + (i+1)*params[2] + j << " "<< 1 + (i+1)*params[2] + j + 1 << "\n";
+				output << "f " << 1 + i*params[2] + j << " " << 1 + i*params[2] + j + 1 << " "<< 1 + (i+1)*params[2] + j + 1 << "\n";
+			}
+			else {
+				output << "f " << 1+ i*params[2] + j << " " << 1 + j << " "<< 1 + j + 1 << "\n";
+				output << "f " << 1 + i*params[2] + j << " " << 1 + i*params[2] + j + 1 << " "<< 1 + j + 1 << "\n";
+			
+			}
+		}
+	}
+
+	output.close ();
 }
 
 void correct_params (std::vector<int> params, int curve_id) {
