@@ -154,11 +154,11 @@ void print_sphere (std::vector<Vertex> vertices, std::vector<int> params) {
 	for (int i = 0; i < params[1]; ++i) {
 		for (int j = 0; j < params[2] - 1; ++j) {
 			if (i != params[1] - 1) {
-				output << "f " << 1 + i*params[2] + j << " " << 1 + (i+1)*params[2] + j << " "<< 1 + (i+1)*params[2] + j + 1 << "\n";
+				output << "f " << 1 + i*params[2] + j << " " << 1 + (i+1)*params[2] + j + 1 << " "<< 1 + (i+1)*params[2] + j << "\n";
 				output << "f " << 1 + i*params[2] + j << " " << 1 + i*params[2] + j + 1 << " "<< 1 + (i+1)*params[2] + j + 1 << "\n";
 			}
 			else {
-				output << "f " << 1+ i*params[2] + j << " " << 1 + j << " "<< 1 + j + 1 << "\n";
+				output << "f " << 1+ i*params[2] + j << " " << 1 + j + 1 << " "<< 1 + j << "\n";
 				output << "f " << 1 + i*params[2] + j << " " << 1 + i*params[2] + j + 1 << " "<< 1 + j + 1 << "\n";
 			
 			}
