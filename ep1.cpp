@@ -4,6 +4,7 @@
 #include <vector>
 #include <fstream>
 #include <string>
+#include <cstring>
 
 class Vertex {
 	private:
@@ -41,15 +42,15 @@ void print_to_obj (std::vector<Vertex> vertices, std::vector<int> params);
 void correct_params (std::vector<int> params, int curve_id);
 void calc_for_sphere (std::vector<Vertex> *vertices, std::vector<int> params);
 void print_sphere (std::vector<Vertex> vertices, std::vector<int> params);
-void desired_curve (std::vector<int> *params);
+void desired_curve (std::vector<int> *params, int argc, char*argv[]);
 
-int main () {
+int main (int argc, char *argv[]) {
 	//Because there are three coordinates for each vertex,
 	//each vector will have 3 times the number of vertices.
 	std::vector<Vertex> vertices;
 	std::vector<int> parameters;
 
-	desired_curve (&parameters);
+	desired_curve (&parameters, argc, argv);
 	parameters.push_back (1);
 	parameters.push_back (100);
 	parameters.push_back (100);
@@ -59,17 +60,29 @@ int main () {
 	for (int i = 0; i < vertices.size (); ++i)
 		std::cout << vertices[i].x() << " " << vertices[i].y() << " " << vertices[i].z() << "\n";
 	*/
-	
-	output_name = "teste.obj";
+
 	print_to_obj (vertices, parameters);
 
 	return 0;
 }
 
-void desired_curve (std::vector<int> *params) {
-	std::string token;
-	std::cin >> token;
-	std::cout << token << "\n";
+void desired_curve (std::vector<int> *params, int argc, char*argv[]) {
+	if (strcmp (argv[2], "cylinder") == 0) {
+		params->push_back (0);
+		params->push_back (atoi (argv[1]));
+	}
+	else if (strcmp (argv[3], "sphere") == 0) {
+		params->push_back (1);
+		params->push_back (atoi (argv[1]));
+		params->push_back (atoi (argv[2]));
+	}
+	else if (strcmp (argv[4], "torus") == 0) {
+		params->push_back (2);
+		params->push_back (atoi (argv[1]));
+		params->push_back (atoi (argv[2]));
+		params->push_back (atoi (argv[2]));
+	}
+	output_name = argv[argc - 1];
 }
 	
 void calculate_vertex (std::vector<Vertex> *vertices, std::vector<int> params) {
