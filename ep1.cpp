@@ -13,15 +13,21 @@ class Vertex {
 		float X, Y, Z;
 		float normal_x, normal_y, normal_z;
 
-		Vertex (float x, float y, float z) {
+		Vertex (float x, float y, float z, float nx, float ny, float nz) {
 			this->X = x;
 			this->Y = y;
 			this->Z = z;
+			this->normal_x = nx;
+			this->normal_y = ny;
+			this->normal_z = nz;
 		}
 
 		float x (void);
 		float y (void);
 		float z (void);
+		float nx (void);
+		float ny (void);
+		float nz (void);
 };
 
 float Vertex::x (void) {
@@ -32,6 +38,16 @@ float Vertex::y (void) {
 }
 float Vertex::z (void) {
 	return Z;
+}
+
+float Vertex::nx (void) {
+	return normal_x;
+}
+float Vertex::ny (void) {
+	return normal_y;
+}
+float Vertex::nz (void) {
+	return normal_z;
 }
 
 std::fstream output;
@@ -102,7 +118,7 @@ void calculate_vertex (std::vector<Vertex> *vertices, std::vector<int> params) {
 		default:
 			std::cout << "Not a valid curve!\n";
 			abort ();
-	}
+	}	
 }
 
 /* Parametric equations for the sphere (unit radius):
@@ -114,16 +130,23 @@ void calculate_vertex (std::vector<Vertex> *vertices, std::vector<int> params) {
 void calc_for_sphere (std::vector<Vertex> *vertices, std::vector<int> params) {
 	correct_params (params, params[0]);
 
-	for (int i = 0; i < params[1]; ++i) {
-		for (int j = 0; j < params[2]; ++j) {
-			float x = sqrt (1 - pow (cos (j * M_PI/ (params[2] - 1)), 2)) * cos (i * 2 * M_PI / (params[1]));
-			float y = sqrt (1 - pow (cos (j * M_PI/ (params[2] - 1)), 2)) * sin (i * 2 * M_PI / (params[1]));
-			float z = cos (j * M_PI / (params[2] - 1));
+	for (int j = params[1] - 1; j >= 0; --j) {
+		for (int i = params[2] - 1; i >= 0; --i) {
+			float x = cos (M_PI/2 + i * M_PI/ (params[2]-1)) * sin (j *2* M_PI / (params[1]));
+			float y = sin (M_PI/2 + i * M_PI / (params[2]-1));
+			float z = cos (M_PI/2 + i * M_PI/ (params[2]-1)) * cos (j *2 * M_PI / (params[1]));
 
-			vertices->push_back (Vertex (x, y, z));
+			float mag = sqrt (x*x + y*y +z*z);
+			float nx = x / mag;
+			float ny = y / mag;
+			float nz = z / mag;
+
+			vertices->push_back (Vertex (x, y, z, nx, ny, nz));
+
 
 			//std::cout << x << " " << y << " " << z << "\n";
 		}
+		//std::cout << "//\n";
 	}
 }
 
@@ -150,17 +173,31 @@ void print_sphere (std::vector<Vertex> vertices, std::vector<int> params) {
 	
 	for (int i = 0; i < vertices.size (); ++i)
 		output << "v " << vertices[i].x() << " " << vertices[i].y() << " "<< vertices[i].z() << "\n";
+	
+	//for (int i = 0; i < vertices.size (); ++i)
+	//	output << "vn " << vertices[i].nx() << " " << vertices[i].ny() << " "<< vertices[i].nz() << "\n";
 
 	for (int i = 0; i < params[1]; ++i) {
 		for (int j = 0; j < params[2] - 1; ++j) {
 			if (i != params[1] - 1) {
-				output << "f " << 1 + i*params[2] + j << " " << 1 + (i+1)*params[2] + j + 1 << " "<< 1 + (i+1)*params[2] + j << "\n";
-				output << "f " << 1 + i*params[2] + j << " " << 1 + i*params[2] + j + 1 << " "<< 1 + (i+1)*params[2] + j + 1 << "\n";
+				int x = 1 + i*params[2] + j;
+				int y = 1 + (i+1)*params[2] + j + 1;
+				int z = 1 + (i+1)*params[2] + j;
+				int w = 1 + i*params[2] + j + 1;
+				output << "f "<< x <<"/"<<x<<" "<<y<<"/"<<y<<" "<<z<<"/"<<z<< "\n";
+				//output << "f "<<x<<" "<<y<<" "<<z<< "\n";
+				output << "f "<< x <<"/"<<x<<" "<<w<<"/"<<w<<" "<<y<<"/"<<y<< "\n";
+				//output << "f "<<x<<" "<<w<<" "<<y<< "\n";
 			}
 			else {
-				output << "f " << 1+ i*params[2] + j << " " << 1 + j + 1 << " "<< 1 + j << "\n";
-				output << "f " << 1 + i*params[2] + j << " " << 1 + i*params[2] + j + 1 << " "<< 1 + j + 1 << "\n";
-			
+				int x = 1 + i*params[2] + j;
+				int y = 1 + j + 1;
+				int z = 1 + j;
+				int w = 1 + i*params[2] + j + 1;
+				output << "f "<< x <<"/"<<x<<" "<<y<<"/"<<y<<" "<<z<<"/"<<z<< "\n";
+				//output << "f "<<x<<" "<<y<<" "<<z<< "\n";
+				output << "f "<< x <<"/"<<x<<" "<<w<<"/"<<w<<" "<<y<<"/"<<y<< "\n";
+				//output << "f "<<x<<" "<<w<<" "<<y<< "\n";
 			}
 		}
 	}
