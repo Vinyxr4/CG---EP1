@@ -3,17 +3,17 @@ OPT = ""
 COMP = g++
 COMPOBJ = $(COMP) -c $<
 
-ep1: ep1.o
+mesh: mesh.o
 	g++ $^ -o $@
 
-ep1.o: ep1.cpp
+mesh.o: mesh.cpp
 	$(COMPOBJ)
 
 run:
-	./ep1
+	./mesh
 
 clear:
 	rm *.o
 
 del_exec:
-	rm ep1
+	rm mesh
