@@ -9,8 +9,11 @@ mesh: mesh.o
 mesh.o: mesh.cpp
 	$(COMPOBJ)
 
-run:
-	./mesh
+cylinder_test:
+	./mesh -n 100 cylinder cylinder_test.obj
+
+sphere_test:
+	./mesh -n 100 -m 100 sphere sphere_test.obj
 
 clear:
 	rm *.o

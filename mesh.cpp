@@ -280,14 +280,16 @@ void correct_params (std::vector<int> params, int curve_id) {
    switch (curve_id) {
       case 0:
          if (params[1] < 0) {
-            std::cout << "Invalid arguments for sphere!\n";
+            std::cout << "Invalid arguments for cylinder!\n";
             abort ();
          }
+         break;
       case 1:
          if (params[1] < 0 || params[2] < 0) {
             std::cout << "Invalid arguments for sphere!\n";
             abort ();
          }
+         break;
       default:
          break;
    }
