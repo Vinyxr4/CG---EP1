@@ -7,13 +7,12 @@
 #include <string>
 #include <cstring>
 
+// Class that abstracts a vertex and it's normal.
 class Vertex {
    private:
-//    float x, y, z;
+   float X, Y, Z;
+   float normal_x, normal_y, normal_z;
    public:
-      float X, Y, Z;
-      float normal_x, normal_y, normal_z;
-
       Vertex (float x, float y, float z, float nx, float ny, float nz) {
          this->X = x;
          this->Y = y;
@@ -40,7 +39,6 @@ float Vertex::y (void) {
 float Vertex::z (void) {
    return Z;
 }
-
 float Vertex::nx (void) {
    return normal_x;
 }
@@ -54,6 +52,7 @@ float Vertex::nz (void) {
 std::fstream output;
 std::string output_name;
 
+// Functions prototypes.
 void calculate_vertex (std::vector<Vertex> *vertices, std::vector<int> params);
 void print_to_obj (std::vector<Vertex> vertices, std::vector<int> params);
 void correct_params (std::vector<int> params, int curve_id);
@@ -63,9 +62,8 @@ void print_cylinder (std::vector<Vertex> vertices, std::vector<int> params);
 void print_sphere (std::vector<Vertex> vertices, std::vector<int> params);
 void desired_curve (std::vector<int> *params, int argc, char*argv[]);
 
+// Main function.
 int main (int argc, char *argv[]) {
-   //Because there are three coordinates for each vertex,
-   //each vector will have 3 times the number of vertices.
    std::vector<Vertex> vertices;
    std::vector<int> parameters;
 
@@ -73,16 +71,12 @@ int main (int argc, char *argv[]) {
 
    calculate_vertex (&vertices, parameters);
 
-   /*
-   for (int i = 0; i < vertices.size (); ++i)
-      std::cout << vertices[i].x() << " " << vertices[i].y() << " " << vertices[i].z() << "\n";
-   */
-
    print_to_obj (vertices, parameters);
 
    return 0;
 }
 
+// Gets the argument line and treats it to get the arguments for the program.
 void desired_curve (std::vector<int> *params, int argc, char*argv[]) {
    int curve, n, m, r;
    n = m = r = -1;
@@ -104,32 +98,15 @@ void desired_curve (std::vector<int> *params, int argc, char*argv[]) {
       else
          output_name = argv[i];
    }
-   //std::cout << output_name << "\n";
+
    params->push_back (curve);
    params->push_back (n);
    params->push_back (m);
    params->push_back (r);
-
-
-   /*
-   if (strcmp (argv[2], "cylinder") == 0) {
-      params->push_back (0);
-      params->push_back (atoi (argv[1]));
-   }
-   else if (strcmp (argv[3], "sphere") == 0) {
-      params->push_back (1);
-      params->push_back (atoi (argv[1]));
-      params->push_back (atoi (argv[2]));
-   }
-   else if (strcmp (argv[4], "torus") == 0) {
-      params->push_back (2);
-      params->push_back (atoi (argv[1]));
-      params->push_back (atoi (argv[2]));
-      params->push_back (atoi (argv[2]));
-   }
-   output_name = argv[argc - 1];*/
 }
-   
+
+// Calculates the vertices of the desired shape and their normals,
+// storing them into a vertex buffer.
 void calculate_vertex (std::vector<Vertex> *vertices, std::vector<int> params) {
    switch (params[0]) {
       case 0:
@@ -154,7 +131,7 @@ void calculate_vertex (std::vector<Vertex> *vertices, std::vector<int> params) {
 // storing them into a vertex buffer.
 void calc_for_cylinder (std::vector<Vertex> *vertices, std::vector<int> params) {
       float height = 2;
-      //correct_params (params, params[0]);
+      correct_params (params, params[0]);
 
       vertices->push_back (Vertex (0, -height/2, 0, 0, -1, 0));
       vertices->push_back (Vertex (0, height/2, 0, 0, 1, 0));
@@ -298,6 +275,7 @@ void print_sphere (std::vector<Vertex> vertices, std::vector<int> params) {
    output.close ();
 }
 
+// Verifies if the parameters to create the mesh is correct.
 void correct_params (std::vector<int> params, int curve_id) {
    switch (curve_id) {
       case 0:
