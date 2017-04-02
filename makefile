@@ -17,6 +17,4 @@ sphere_test:
 
 clear:
 	rm *.o
-
-del_exec:
 	rm mesh
