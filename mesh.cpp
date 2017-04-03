@@ -58,9 +58,14 @@ void print_to_obj (std::vector<Vertex> vertices, std::vector<int> params);
 void correct_params (std::vector<int> params, int curve_id);
 void calc_for_cylinder (std::vector<Vertex> *vertices, std::vector<int> params);
 void calc_for_sphere (std::vector<Vertex> *vertices, std::vector<int> params);
+void calc_for_torus (std::vector<Vertex> *vertices, std::vector<int> params);
 void print_cylinder (std::vector<Vertex> vertices, std::vector<int> params);
 void print_sphere (std::vector<Vertex> vertices, std::vector<int> params);
+void print_torus (std::vector<Vertex> vertices, std::vector<int> params);
 void desired_curve (std::vector<int> *params, int argc, char*argv[]);
+
+// Global variable for the -r flag
+float r = 0.00;
 
 // Main function.
 int main (int argc, char *argv[]) {
@@ -78,9 +83,8 @@ int main (int argc, char *argv[]) {
 
 // Gets the argument line and treats it to get the arguments for the program.
 void desired_curve (std::vector<int> *params, int argc, char*argv[]) {
-   int curve, n, m, r;
-   n = m = r = -1;
-
+   int curve, n, m;
+   n = m = -1;
 
    for (int i = 1; i < argc; ++i) {
       if (strcmp (argv[i], "cylinder") == 0)
@@ -94,7 +98,7 @@ void desired_curve (std::vector<int> *params, int argc, char*argv[]) {
       else if (strcmp (argv[i], "-m") == 0)
          m = atoi (argv[++i]);
       else if (strcmp (argv[i], "-r") == 0)
-         r = atoi (argv[++i]);
+         r = atof (argv[++i]);
       else
          output_name = argv[i];
    }
@@ -118,7 +122,7 @@ void calculate_vertex (std::vector<Vertex> *vertices, std::vector<int> params) {
          break;
       
       case 2:
-         //calc_for_torus (vert, norm, params);
+         calc_for_torus (vertices, params);
          break;
       
       default:
@@ -179,6 +183,31 @@ void calc_for_sphere (std::vector<Vertex> *vertices, std::vector<int> params) {
    }
 }
 
+// Calculates the vertices of the torus surface and their normals,
+// storing them into a vertex buffer.
+void calc_for_torus (std::vector<Vertex> *vertices, std::vector<int> params) {
+   correct_params (params, params[0]);
+
+   float R = 1.00;
+
+   if (r <= 0)
+      r = 0.25;
+
+   for (int i = 0; i < params[1]; ++i) {
+      for (int j = 0; j < params[2]; ++j) {
+         float x = (R + r * cos (j * 2 * M_PI / params[2])) * cos (i * 2 * M_PI / (params[1]));
+         float y = (R + r * cos (j * 2 * M_PI / params[2])) * sin (i * 2 * M_PI / (params[1]));
+         float z = r * sin (j * 2 * M_PI / params[2]);
+
+         float nx = r * cos (i * 2 * M_PI / (params[1])) * cos (j * 2 * M_PI / params[2]) * (R + r * cos (j * 2 * M_PI / params[2]));
+         float ny = r * cos (j * 2 * M_PI / params[2]) * sin (i * 2 * M_PI / (params[1])) * (R + r * cos (j * 2 * M_PI / params[2]));
+         float nz = r * sin (j * 2 * M_PI / params[2]) * (R + r * cos (j * 2 * M_PI / params[2]));
+
+         vertices->push_back (Vertex (x, y, z, nx, ny, nz));
+      }
+   }
+}
+
 // Prints the vertices buffer content onto a .obj file.
 void print_to_obj (std::vector<Vertex> vertices, std::vector<int> params) {
    switch (params[0]) {
@@ -189,7 +218,7 @@ void print_to_obj (std::vector<Vertex> vertices, std::vector<int> params) {
          print_sphere (vertices, params);
          break;
       case 2:
-         //print_torus (vertices, params);
+         print_torus (vertices, params);
          break;
       default:
          std::cout << "Not a valid curve!\n";
@@ -275,6 +304,42 @@ void print_sphere (std::vector<Vertex> vertices, std::vector<int> params) {
    output.close ();
 }
 
+// Call of print_to_obj() for a torus shape.
+void print_torus (std::vector<Vertex> vertices, std::vector<int> params) {
+   output.open (output_name.c_str (), std::fstream::out);
+   
+   for (int i = 0; i < vertices.size (); ++i)
+      output << "v " << vertices[i].x() << " " << vertices[i].y() << " "<< vertices[i].z() << "\n";
+   
+   for (int i = 0; i < vertices.size (); ++i)
+      output << "vn " << vertices[i].nx() << " " << vertices[i].ny() << " "<< vertices[i].nz() << "\n";
+
+   int md = params[2] - 1;
+
+   for (int i = 0; i < params[1]; ++i) {
+      for (int j = 0; j < params[2]; ++j) {
+         if (i != params[1] - 1) {
+            int x = 1 + i*params[2] + j;
+            int y = 1 + (i+1)*params[2] + (j % md) + 1;
+            int z = 1 + (i+1)*params[2] + j;
+            int w = 1 + i*params[2] + (j % md) + 1;
+            output << "f "<< x <<"//"<<x<<" "<<z<<"//"<<z<<" "<<y<<"//"<<y<< "\n";
+            output << "f "<< x <<"//"<<x<<" "<<y<<"//"<<y<<" "<<w<<"//"<<w<< "\n";
+         }
+         else {
+            int x = 1 + i*params[2] + j;
+            int y = 1 + (j % md) + 1;
+            int z = 1 + j;
+            int w = 1 + i*params[2] + (j % md) + 1;
+            output << "f "<< x <<"//"<<x<<" "<<z<<"//"<<z<<" "<<y<<"//"<<y<< "\n";
+            output << "f "<< x <<"//"<<x<<" "<<y<<"//"<<y<<" "<<w<<"//"<<w<< "\n";
+         }
+      }
+   }
+
+   output.close ();
+}
+
 // Verifies if the parameters to create the mesh is correct.
 void correct_params (std::vector<int> params, int curve_id) {
    switch (curve_id) {
@@ -287,6 +352,12 @@ void correct_params (std::vector<int> params, int curve_id) {
       case 1:
          if (params[1] < 0 || params[2] < 0) {
             std::cout << "Invalid arguments for sphere!\n";
+            abort ();
+         }
+         break;
+      case 2:
+         if (params[1] < 0 || params[2] < 0) {
+            std::cout << "Invalid arguments for torus!\n";
             abort ();
          }
          break;
