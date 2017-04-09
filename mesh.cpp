@@ -65,7 +65,7 @@ void print_torus (std::vector<Vertex> vertices, std::vector<int> params);
 void desired_curve (std::vector<int> *params, int argc, char*argv[]);
 
 // Global variable for the -r flag
-float r = 0.00;
+float r = 0.0;
 
 // Main function.
 int main (int argc, char *argv[]) {
@@ -196,12 +196,16 @@ void calc_for_torus (std::vector<Vertex> *vertices, std::vector<int> params) {
    for (int i = 0; i < params[1]; ++i) {
       for (int j = 0; j < params[2]; ++j) {
          float x = (R + r * cos (j * 2 * M_PI / params[2])) * cos (i * 2 * M_PI / (params[1]));
-         float y = (R + r * cos (j * 2 * M_PI / params[2])) * sin (i * 2 * M_PI / (params[1]));
-         float z = r * sin (j * 2 * M_PI / params[2]);
+         float z = (R + r * cos (j * 2 * M_PI / params[2])) * sin (i * 2 * M_PI / (params[1]));
+         //float y = r * sin (j * 2 * M_PI / params[2]);
+         float y = r * sin (j * 2 * M_PI / params[2]);
+         //float z = (R + r * cos (j * 2 * M_PI / params[2])) * sin (i * 2 * M_PI / (params[1]));
 
          float nx = r * cos (i * 2 * M_PI / (params[1])) * cos (j * 2 * M_PI / params[2]) * (R + r * cos (j * 2 * M_PI / params[2]));
-         float ny = r * cos (j * 2 * M_PI / params[2]) * sin (i * 2 * M_PI / (params[1])) * (R + r * cos (j * 2 * M_PI / params[2]));
-         float nz = r * sin (j * 2 * M_PI / params[2]) * (R + r * cos (j * 2 * M_PI / params[2]));
+         float nz = r * cos (j * 2 * M_PI / params[2]) * sin (i * 2 * M_PI / (params[1])) * (R + r * cos (j * 2 * M_PI / params[2]));
+         //float ny = r * sin (j * 2 * M_PI / params[2]) * (R + r * cos (j * 2 * M_PI / params[2]));
+         float ny = r * sin (j * 2 * M_PI / params[2]) * (R + r * cos (j * 2 * M_PI / params[2]));
+         //float nz = r * cos (j * 2 * M_PI / params[2]) * sin (i * 2 * M_PI / (params[1])) * (R + r * cos (j * 2 * M_PI / params[2]));
 
          vertices->push_back (Vertex (x, y, z, nx, ny, nz));
       }
@@ -323,16 +327,16 @@ void print_torus (std::vector<Vertex> vertices, std::vector<int> params) {
             int y = 1 + (i+1)*params[2] + (j % md) + 1;
             int z = 1 + (i+1)*params[2] + j;
             int w = 1 + i*params[2] + (j % md) + 1;
-            output << "f "<< x <<"//"<<x<<" "<<z<<"//"<<z<<" "<<y<<"//"<<y<< "\n";
-            output << "f "<< x <<"//"<<x<<" "<<y<<"//"<<y<<" "<<w<<"//"<<w<< "\n";
+            output << "f "<< y <<"//"<<y<<" "<<z<<"//"<<z<<" "<<x<<"//"<<x<< "\n";
+            output << "f "<< w <<"//"<<w<<" "<<y<<"//"<<y<<" "<<x<<"//"<<x<< "\n";
          }
          else {
             int x = 1 + i*params[2] + j;
             int y = 1 + (j % md) + 1;
             int z = 1 + j;
             int w = 1 + i*params[2] + (j % md) + 1;
-            output << "f "<< x <<"//"<<x<<" "<<z<<"//"<<z<<" "<<y<<"//"<<y<< "\n";
-            output << "f "<< x <<"//"<<x<<" "<<y<<"//"<<y<<" "<<w<<"//"<<w<< "\n";
+            output << "f "<< y <<"//"<<y<<" "<<z<<"//"<<z<<" "<<x<<"//"<<x<< "\n";
+            output << "f "<< w <<"//"<<w<<" "<<y<<"//"<<y<<" "<<x<<"//"<<x<< "\n";
          }
       }
    }
