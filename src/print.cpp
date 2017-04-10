@@ -1,3 +1,8 @@
+//Students:                 | NUSP
+
+//Patrick Abrahão Menani    | 8941050
+//Vinícius Pessoa Duarte    | 8941043
+
 #include "../lib/print.h"
 
 // Prints the vertices buffer content onto a .obj file.

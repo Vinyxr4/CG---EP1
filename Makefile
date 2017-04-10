@@ -1,24 +1,30 @@
+#Students:                 | NUSP
 
-OPT = ""
-COMP = g++
-COMPOBJ = $(COMP) -c $<
+#Patrick Abrahão Menani    | 8941050
+#Vinícius Pessoa Duarte    | 8941043
 
-mesh: mesh.o Vertex.o global.o print.o calc.o
-	g++ $^ -o $@
- 
-mesh.o: src/mesh.cpp lib/calc.h lib/Vertex.h lib/global.h lib/print.h
+OBJ_DIR=objs/
+OPT =-O2
+COMP = g++ $(OPT)
+COMPOBJ = $(COMP) -c $< -o $@
+OBJS = $(patsubst %.o, objs/%.o, mesh.o Vertex.o global.o print.o calc.o)
+
+mesh: $(OBJS)
+	g++ $(OBJS) -o $@
+
+$(OBJ_DIR)mesh.o: src/mesh.cpp lib/calc.h lib/Vertex.h lib/global.h lib/print.h
 	$(COMPOBJ)
 
-Vertex.o: src/Vertex.cpp lib/Vertex.h lib/global.h
+$(OBJ_DIR)Vertex.o: src/Vertex.cpp lib/Vertex.h lib/global.h
 	$(COMPOBJ)
 
-global.o: src/global.cpp lib/global.h
+$(OBJ_DIR)global.o: src/global.cpp lib/global.h
 	$(COMPOBJ)
 
-print.o: src/print.cpp lib/print.h lib/Vertex.h lib/global.h
+$(OBJ_DIR)print.o: src/print.cpp lib/print.h lib/Vertex.h lib/global.h
 	$(COMPOBJ)
 
-calc.o: src/calc.cpp lib/calc.h lib/Vertex.h lib/global.h
+$(OBJ_DIR)calc.o: src/calc.cpp lib/calc.h lib/Vertex.h lib/global.h
 	$(COMPOBJ)
 
 cylinder_test:
@@ -31,5 +37,5 @@ torus_test:
 	./mesh -n 100 -m 100 -r 0.25 torus torus_test.obj
 
 clear:
-	rm *.o
+	rm $(OBJ_DIR)*.o
 	rm mesh

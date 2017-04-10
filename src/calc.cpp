@@ -1,3 +1,9 @@
+//Students:                 | NUSP
+
+//Patrick Abrahão Menani    | 8941050
+//Vinícius Pessoa Duarte    | 8941043
+
+
 #include "../lib/calc.h"
 
 // Calculates the vertices of the desired shape and their normals,
