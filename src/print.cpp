@@ -5,7 +5,6 @@
 
 #include "../lib/print.h"
 
-// Prints the vertices buffer content onto a .obj file.
 void print_to_obj (std::vector<Vertex> vertices, std::vector<int> params) {
    switch (params[0]) {
       case 0:
@@ -23,7 +22,6 @@ void print_to_obj (std::vector<Vertex> vertices, std::vector<int> params) {
    }
 }
 
-// Call of print_to_obj() for a cylinder shape.
 void print_cylinder (std::vector<Vertex> vertices, std::vector<int> params) {
    output.open (output_name.c_str (), std::fstream::out);
    
@@ -67,7 +65,6 @@ void print_cylinder (std::vector<Vertex> vertices, std::vector<int> params) {
    output.close ();
 }
 
-// Call of print_to_obj() for a sphere shape.
 void print_sphere (std::vector<Vertex> vertices, std::vector<int> params) {
    output.open (output_name.c_str (), std::fstream::out);
    
@@ -101,7 +98,6 @@ void print_sphere (std::vector<Vertex> vertices, std::vector<int> params) {
    output.close ();
 }
 
-// Call of print_to_obj() for a torus shape.
 void print_torus (std::vector<Vertex> vertices, std::vector<int> params) {
    output.open (output_name.c_str (), std::fstream::out);
    

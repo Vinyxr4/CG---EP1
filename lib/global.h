@@ -9,6 +9,7 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
+// Extern variables
 extern std::fstream output;
 extern std::string output_name;
 extern float r;

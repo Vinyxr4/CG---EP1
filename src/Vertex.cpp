@@ -5,6 +5,8 @@
 
 #include "../lib/Vertex.h"
 
+// Access funcitions
+
 float Vertex::x (void) {
    return X;
 }
