@@ -1,4 +1,4 @@
-#include "lib/print.h"
+#include "../lib/print.h"
 
 // Prints the vertices buffer content onto a .obj file.
 void print_to_obj (std::vector<Vertex> vertices, std::vector<int> params) {

@@ -1,4 +1,4 @@
-#include "lib/calc.h"
+#include "../lib/calc.h"
 
 // Calculates the vertices of the desired shape and their normals,
 // storing them into a vertex buffer.

@@ -1,10 +1,10 @@
 #include <vector>
 #include <string>
 #include <cstring>
-#include "lib/Vertex.h"
-#include "lib/global.h"
-#include "lib/print.h"
-#include "lib/calc.h"
+#include "../lib/Vertex.h"
+#include "../lib/global.h"
+#include "../lib/print.h"
+#include "../lib/calc.h"
 
 
 // Functions prototypes.

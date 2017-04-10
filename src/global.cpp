@@ -1,4 +1,4 @@
-#include "lib/global.h"
+#include "../lib/global.h"
 
 std::fstream output;
 std::string output_name;

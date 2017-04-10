@@ -1,4 +1,4 @@
-#include "lib/Vertex.h"
+#include "../lib/Vertex.h"
 
 float Vertex::x (void) {
    return X;
