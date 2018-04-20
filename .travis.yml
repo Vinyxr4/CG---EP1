@@ -1,2 +1,11 @@
 dist: trusty
 
+deploy:
+  provider: releases
+  api_key:
+    secure: qtNtE3o3/dEhjXOwTrUI3f7O5YwfwIm+S/BaWEp872rfY8mRH7VLVduJxQIWXwFIsgY2iaU6FOt7gnz72Eo9YHexd0snKzvKTw5y0q4fmqmgUjvRKRnSZn/gsJAYSoz8wNokq0EAuNcMu2nW+UpAhHI8mp9jFJ2snxkSYSVcioKHMWpJDmECylPIeCgHKcwc1eRvl9pneDY9ur8NsZQ/e5NInTjL2XDraWWodvM02FIJR9IHbrv1s68MEZTt1UAwVO36R20+BjzEB32OFCdiSNYMKOX+ZYLpJ/NAiWkrAzRD4e7tvqSoygt8Mlg452NwNEGPECf5iVe8bm7jumHraQvA5aQGxNmZI1rjGNL8Uh2YV8Xb0TqgmZkVaMtL8ccdNp0otANmrLNUT8/JNXe7nRoqlZQA4Le7K0R+C7eSOFInxhXW4yGatRkGd+XXeUYraYnFVQQpFiycW0D5dXJtAumIChZw8pHm96OA6bxT3rHb0zz+6GHDCA1bjbvAKKGO6+84eGadwHekDpBfT7ZLDB3l6wJNX5/VKRLDAAHglP0I+c70CKjKo6YUAGpLfSkcoF04w9bwTkqCvMa14W07BPMl180uuMYlUFS4UEWcisL1EcwV8Y8d5qQDb92a7+NcCkGhrLQheE5MUE8a3PtfWMl3qcGk801xW3K50jIVwmQ=
+  file: release.tar.gz
+  skip_cleanup: true
+  on:
+    repo: Vinyxr4/CG---EP1
+    all_branches: true
